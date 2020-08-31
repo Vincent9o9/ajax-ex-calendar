@@ -24,26 +24,57 @@
 $(document).ready(function() {
     var dataCorrente = moment('2018-01-01');
 
-    var month = dataCorrente.format('MMMM');
-    var year = dataCorrente.format('YYYY');
+    insertDays(dataCorrente);
+    insertHolidays(dataCorrente);
+
+
+});
+
+// **  FUNZIONI  **
+
+function insertHolidays(data) {
+    $.ajax(
+    {
+        url: 'https://flynn.boolean.careers/exercises/api/holidays',
+        method: 'GET',
+        data: {
+            year:,
+            month:
+        },
+        success: function(){
+
+        },
+        error: function (){
+            alert('errore')
+        }
+    }
+    );
+};
+
+function insertDays(data) {
+    var month = data.format('MMMM');
+    var year = data.format('YYYY');
 
     $('h1.month').html(month + ' ' + year);
 
-    var daysMonth = dataCorrente.daysInMonth();
+    var daysMonth = data.daysInMonth();
 
     for (var i = 1; i <= daysMonth; i++) {
+
         var source = $("#day-template").html();
         var template = Handlebars.compile(source);
 
         var context = {
             day: addZero(i),
-            month: month
+            month: month,
+            completeDate : year + '-' + month + '-' + addZero(i)
         };
+
         var html = template(context);
 
         $('.month-list').append(html);
     }
-});
+};
 
 function addZero(n) {
     if (n<10) {
